@@ -43,11 +43,21 @@ PORT = 8081
 class Data(object):
 
     def __init__(self, inputData, startLayer, endLayer):
+        '''
+        :description:定义边端设备间传输的数据包，根据分割策略定义下一个计算模块的输入数据、开始执行层及终止层
+        :param mode: inputData输入数据，startLayer开始层，endLayer终止层
+        :return: none
+        '''
         self.inputData = inputData
         self.startLayer = startLayer
         self.endLayer=endLayer
 
 def run(model, inputData, startLayer, endLayer):
+    '''
+    :description:根据分割策略，执行边缘侧模型层计算
+    :param mode: model模型，inputData输入数据，startLayer开始层，endLayer终止层
+    :return: outputs执行结果（执行startLayer-endLayer的输出结果）
+    '''
     print("移动端运行%d到%d层" % (startLayer, endLayer))
     if sys.argv[1] == "GoogLeNet":
         outputs = model(inputData, startLayer, endLayer, False)
@@ -56,6 +66,11 @@ def run(model, inputData, startLayer, endLayer):
     return outputs
 
 def test(outputs):
+    '''
+    :description:计算模型精度【辅助函数】
+    :param mode: outputs模型输出结果
+    :return: acc模型精度
+    '''
     # model.eval()
     prediction = torch.max(outputs.data, 1)
     correct_classified = np.sum(prediction[1] == test_y)
